@@ -8,9 +8,9 @@ import java.util.Set;
 
 public class URLUtil {
 
-	public static Map<String, String> getPathAndParams(String url) throws Exception {
+	public static Map<String, Object> getPathAndParams(String url) throws Exception {
 
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 
 		if (url != null && !"".equals(url)) {
 
@@ -73,9 +73,9 @@ public class URLUtil {
 
 	}
 
-	public static Map<String, String> getParams(String url) throws Exception {
+	public static Map<String, Object> getParams(String url) throws Exception {
 
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 
 		if (url != null && !"".equals(url)) {
 
@@ -116,15 +116,15 @@ public class URLUtil {
 
 	public static void main(String[] args) throws Exception {
 
-		Map<String, String> map = getPathAndParams(null);
+		Map<String, Object> map = getPathAndParams(null);
 
-		Set<Entry<String, String>> set = map.entrySet();
+		Set<Entry<String, Object>> set = map.entrySet();
 
-		Iterator<Entry<String, String>> iterator = set.iterator();
+		Iterator<Entry<String, Object>> iterator = set.iterator();
 
 		while (iterator.hasNext()) {
 
-			Entry<String, String> entry = iterator.next();
+			Entry<String, Object> entry = iterator.next();
 
 			System.out.println(entry.getKey() + ": " + entry.getValue());
 

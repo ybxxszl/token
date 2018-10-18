@@ -24,7 +24,7 @@ public class TokenController {
 
 		try {
 
-			Map<String, String> map = URLUtil.getParams(url);
+			Map<String, Object> map = URLUtil.getParams(url);
 
 			token = JWT.createJWT(map, mills);
 
@@ -43,7 +43,7 @@ public class TokenController {
 
 		try {
 
-			Map<String, String> map = JWT.parseJWT(token);
+			Map<String, Object> map = JWT.parseJWT(token);
 
 			map.remove("iss");
 			map.remove("exp");
@@ -65,10 +65,10 @@ public class TokenController {
 
 		try {
 
-			Map<String, String> map = JWT.parseJWT(token);
+			Map<String, Object> map = JWT.parseJWT(token);
 
-			String iss = map.get("iss");
-			long expMillis = Long.parseLong(map.get("exp"));
+			Object iss = map.get("iss");
+			long expMillis = Long.parseLong(map.get("exp").toString());
 
 			long nowMillis = System.currentTimeMillis();
 
