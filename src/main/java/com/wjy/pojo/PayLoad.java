@@ -1,4 +1,4 @@
-package com.wjy.vo;
+package com.wjy.pojo;
 
 public class PayLoad {
 
