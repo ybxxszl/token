@@ -16,7 +16,7 @@ import com.wjy.util.URLUtil;
 public class TokenController {
 
 	@GetMapping(value = "/getToken")
-	public JSONResult getToken(HttpServletRequest request, long expMills) {
+	public JSONResult getToken(HttpServletRequest request, long mills) {
 
 		String token = null;
 
@@ -26,7 +26,7 @@ public class TokenController {
 
 			Map<String, String> map = URLUtil.getParams(url);
 
-			token = JWT.createJWT(map, expMills);
+			token = JWT.createJWT(map, mills);
 
 			return JSONResult.ok(token);
 
@@ -39,7 +39,7 @@ public class TokenController {
 	}
 
 	@GetMapping(value = "/refreshToken")
-	public JSONResult refreshToken(String token, long expMills) {
+	public JSONResult refreshToken(String token, long mills) {
 
 		try {
 
@@ -48,7 +48,7 @@ public class TokenController {
 			map.remove("iss");
 			map.remove("exp");
 
-			token = JWT.createJWT(map, expMills);
+			token = JWT.createJWT(map, mills);
 
 			return JSONResult.ok(token);
 
