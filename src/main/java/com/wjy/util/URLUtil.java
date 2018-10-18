@@ -1,14 +1,25 @@
 package com.wjy.util;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
+/**
+ * @date 2018年10月18日
+ * @author ybxxszl
+ * @description URL工具类
+ */
 public class URLUtil {
 
-	public static Map<String, Object> getPathAndParams(String url) throws Exception {
+	/**
+	 * @date 2018年10月18日
+	 * @author ybxxszl
+	 * @description TODO
+	 * @throws TODO
+	 * @param url
+	 * @return Map<String,Object>
+	 * @throws Exception
+	 */
+	public static Map<String, Object> getPathAndParam(String url) throws Exception {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -52,6 +63,15 @@ public class URLUtil {
 
 	}
 
+	/**
+	 * @date 2018年10月18日
+	 * @author ybxxszl
+	 * @description TODO
+	 * @throws TODO
+	 * @param url
+	 * @return String
+	 * @throws Exception
+	 */
 	public static String getPath(String url) throws Exception {
 
 		String path = null;
@@ -73,7 +93,16 @@ public class URLUtil {
 
 	}
 
-	public static Map<String, Object> getParams(String url) throws Exception {
+	/**
+	 * @date 2018年10月18日
+	 * @author ybxxszl
+	 * @description TODO
+	 * @throws TODO
+	 * @param url
+	 * @return Map<String,Object>
+	 * @throws Exception
+	 */
+	public static Map<String, Object> getParam(String url) throws Exception {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -114,21 +143,43 @@ public class URLUtil {
 
 	}
 
-	public static void main(String[] args) throws Exception {
+	/**
+	 * @date 2018年10月18日
+	 * @author ybxxszl
+	 * @description TODO
+	 * @throws TODO
+	 * @param param
+	 * @return Map<String,Object>
+	 * @throws Exception
+	 */
+	public static Map<String, Object> getParams(String param) throws Exception {
 
-		Map<String, Object> map = getPathAndParams(null);
+		Map<String, Object> map = new HashMap<String, Object>();
 
-		Set<Entry<String, Object>> set = map.entrySet();
+		if (param != null && !"".equals(param)) {
 
-		Iterator<Entry<String, Object>> iterator = set.iterator();
+			String[] params = param.split("[&]");
 
-		while (iterator.hasNext()) {
+			for (String str : params) {
 
-			Entry<String, Object> entry = iterator.next();
+				String[] keyAndValue = str.split("[=]");
 
-			System.out.println(entry.getKey() + ": " + entry.getValue());
+				if (keyAndValue.length == 2) {
+
+					// 请求参数
+					map.put(keyAndValue[0], keyAndValue[1]);
+
+				}
+
+			}
+
+		} else {
+
+			throw new Exception("无参数");
 
 		}
+
+		return map;
 
 	}
 

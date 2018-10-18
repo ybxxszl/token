@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wjy.jwt.JWT;
-import com.wjy.pojo.JSONResult;
+import com.wjy.result.JSONResult;
 import com.wjy.util.PropertiesUtil;
 import com.wjy.util.URLUtil;
 
@@ -20,11 +20,11 @@ public class TokenController {
 
 		String token = null;
 
-		String url = request.getRequestURI() + "?" + request.getQueryString();
+		String param = request.getQueryString();
 
 		try {
 
-			Map<String, Object> map = URLUtil.getParams(url);
+			Map<String, Object> map = URLUtil.getParams(param);
 
 			token = JWT.createJWT(map, mills);
 

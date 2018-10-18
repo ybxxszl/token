@@ -1,4 +1,4 @@
-package com.wjy.pojo;
+package com.wjy.result;
 
 import java.util.List;
 
