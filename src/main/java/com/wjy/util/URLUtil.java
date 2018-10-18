@@ -3,23 +3,9 @@ package com.wjy.util;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @date 2018年10月18日
- * @author ybxxszl
- * @description URL工具类
- */
 public class URLUtil {
 
-	/**
-	 * @date 2018年10月18日
-	 * @author ybxxszl
-	 * @description TODO
-	 * @throws TODO
-	 * @param url
-	 * @return Map<String,Object>
-	 * @throws Exception
-	 */
-	public static Map<String, Object> getPathAndParam(String url) throws Exception {
+	public static Map<String, Object> getPathAndParamsByURL(String url) throws Exception {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -63,16 +49,7 @@ public class URLUtil {
 
 	}
 
-	/**
-	 * @date 2018年10月18日
-	 * @author ybxxszl
-	 * @description TODO
-	 * @throws TODO
-	 * @param url
-	 * @return String
-	 * @throws Exception
-	 */
-	public static String getPath(String url) throws Exception {
+	public static String getPathByURL(String url) throws Exception {
 
 		String path = null;
 
@@ -93,16 +70,7 @@ public class URLUtil {
 
 	}
 
-	/**
-	 * @date 2018年10月18日
-	 * @author ybxxszl
-	 * @description TODO
-	 * @throws TODO
-	 * @param url
-	 * @return Map<String,Object>
-	 * @throws Exception
-	 */
-	public static Map<String, Object> getParam(String url) throws Exception {
+	public static Map<String, Object> getParamsByURL(String url) throws Exception {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -143,16 +111,7 @@ public class URLUtil {
 
 	}
 
-	/**
-	 * @date 2018年10月18日
-	 * @author ybxxszl
-	 * @description TODO
-	 * @throws TODO
-	 * @param param
-	 * @return Map<String,Object>
-	 * @throws Exception
-	 */
-	public static Map<String, Object> getParams(String param) throws Exception {
+	public static Map<String, Object> getParamsByParam(String param) throws Exception {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 

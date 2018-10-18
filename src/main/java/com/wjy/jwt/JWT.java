@@ -12,13 +12,10 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wjy.util.JSONUtil;
 import com.wjy.util.PropertiesUtil;
 import com.wjy.util.URLUtil;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
-import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -109,16 +106,16 @@ public class JWT {
 	}
 
 	public static void verifyJWT(String jwt) throws Exception {
-		
+
 		String verifyTYP = null;
 		String verifyALG = null;
-		
+
 		String verifyISS = null;
 		long verifyNBF = 0;
 		long verifyEXP = 0;
-		
+
 		Map<String, Object> verifyHeader = new HashMap<String, Object>();
-		
+
 		Map<String, Object> verifyClaims = new HashMap<String, Object>();
 
 		String[] jwts = jwt.split("[.]");
@@ -126,40 +123,40 @@ public class JWT {
 		String header = jwts[0];
 		String payload = jwts[1];
 		String signature = jwts[2];
-		
+
 		JSONObject headerJSON = JSONObject.parseObject(Base64Codec.BASE64URL.decodeToString(header));
-		
+
 		verifyTYP = headerJSON.getString("typ");
 		verifyALG = headerJSON.getString("alg");
-		
+
 		Set<Entry<String, Object>> set1 = headerJSON.entrySet();
 		Iterator<Entry<String, Object>> iterator1 = set1.iterator();
-		
+
 		while (iterator1.hasNext()) {
-			
+
 			Entry<String, Object> entry1 = iterator1.next();
-			
+
 			verifyHeader.put(entry1.getKey(), entry1.getValue());
-			
+
 		}
-		
+
 		JSONObject payloadJSON = JSONObject.parseObject(Base64Codec.BASE64URL.decodeToString(payload));
-		
+
 		verifyISS = payloadJSON.remove("iss").toString();
 		verifyNBF = Long.parseLong(payloadJSON.remove("nbf").toString());
 		verifyEXP = Long.parseLong(payloadJSON.remove("exp").toString());
-		
+
 		Set<Entry<String, Object>> set2 = payloadJSON.entrySet();
 		Iterator<Entry<String, Object>> iterator2 = set2.iterator();
-		
+
 		while (iterator2.hasNext()) {
-			
+
 			Entry<String, Object> entry2 = iterator2.next();
-			
+
 			verifyClaims.put(entry2.getKey(), entry2.getValue());
-			
+
 		}
-		
+
 		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
 		byte[] keys = DatatypeConverter.parseBase64Binary(secret);
@@ -181,26 +178,9 @@ public class JWT {
 
 	public static void main(String[] args) throws Exception {
 
-		Map<String, Object> map = URLUtil.getParams("/getToken?id=123456");
+		Map<String, Object> map = URLUtil.getParamsByParam("id=123456");
 
-		String jwt = createJWT(map, 1000000);
-
-		System.out.println("JWT: " + jwt);
-
-		Map<String, Object> kv = parseJWT(jwt);
-
-		Set<Entry<String, Object>> set = kv.entrySet();
-		Iterator<Entry<String, Object>> iterator = set.iterator();
-
-		while (iterator.hasNext()) {
-
-			Entry<String, Object> entry = iterator.next();
-
-			// System.out.println(entry.getKey() + ": " + entry.getValue());
-
-		}
-
-		verifyJWT(jwt);
+		verifyJWT(createJWT(map, 1000000));
 
 	}
 

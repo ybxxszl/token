@@ -24,7 +24,7 @@ public class TokenController {
 
 		try {
 
-			Map<String, Object> map = URLUtil.getParams(param);
+			Map<String, Object> map = URLUtil.getParamsByParam(param);
 
 			token = JWT.createJWT(map, mills);
 
