@@ -21,6 +21,8 @@ public class TokenController {
 
 			Map<String, Object> map = URLUtil.getParamsByParam(request.getQueryString());
 
+			map.remove("mills");
+
 			return JSONResult.ok(JWT.createJWT(map, mills));
 
 		} catch (Exception e) {

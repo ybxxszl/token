@@ -43,33 +43,45 @@ public class JWT {
 	/*
 	 * 创建JWT
 	 */
-	public static String createJWT(Map<String, Object> map, long mills) {
+	public static String createJWT(Map<String, Object> map, long mills) throws Exception {
 
-		JSONObject header = new JSONObject();
+		String jwt = null;
 
-		header.put("typ", typ);
-		header.put("alg", alg);
+		try {
 
-		long iatMills = System.currentTimeMillis();
+			JSONObject header = new JSONObject();
 
-		Date exp = new Date(iatMills + mills);
+			header.put("typ", typ);
+			header.put("alg", alg);
 
-		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+			long iatMills = System.currentTimeMillis();
 
-		byte[] keys = DatatypeConverter.parseBase64Binary(secret);
+			Date exp = new Date(iatMills + mills);
 
-		Key key = new SecretKeySpec(keys, signatureAlgorithm.getJcaName());
+			SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
-		JwtBuilder jwtBuilder = Jwts.builder();
+			byte[] keys = DatatypeConverter.parseBase64Binary(secret);
 
-		jwtBuilder.setHeader(header);
-		jwtBuilder.setIssuer(iss).setExpiration(exp);
+			Key key = new SecretKeySpec(keys, signatureAlgorithm.getJcaName());
 
-		jwtBuilder.addClaims(map); // 自定义值
+			JwtBuilder jwtBuilder = Jwts.builder();
 
-		jwtBuilder.signWith(key);
+			jwtBuilder.setHeader(header);
+			jwtBuilder.setIssuer(iss).setExpiration(exp);
 
-		return jwtBuilder.compact();
+			jwtBuilder.addClaims(map); // 自定义值
+
+			jwtBuilder.signWith(key);
+
+			jwt = jwtBuilder.compact();
+
+		} catch (Exception e) {
+
+			throw new Exception(e.getMessage());
+
+		}
+
+		return jwt;
 
 	}
 
@@ -78,44 +90,31 @@ public class JWT {
 	 */
 	public static Map<String, Object> verifyJWT(String jwt) throws Exception {
 
-		byte[] keys = DatatypeConverter.parseBase64Binary(secret);
-
-		Claims claims = Jwts.parser().setSigningKey(keys).parseClaimsJws(jwt).getBody();
-
-		String verifyISS = claims.getIssuer();
-		Date verifyEXP = claims.getExpiration();
-
-		claims.remove("iss");
-		claims.remove("exp");
-
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		Set<Entry<String, Object>> set = claims.entrySet();
-		Iterator<Entry<String, Object>> iterator = set.iterator();
+		try {
 
-		while (iterator.hasNext()) {
+			byte[] keys = DatatypeConverter.parseBase64Binary(secret);
 
-			Entry<String, Object> entry = iterator.next();
+			Claims claims = Jwts.parser().setSigningKey(keys).parseClaimsJws(jwt).getBody();
 
-			map.put(entry.getKey(), entry.getValue()); // 自定义值
+			claims.remove("iss");
+			claims.remove("exp");
 
-		}
+			Set<Entry<String, Object>> set = claims.entrySet();
+			Iterator<Entry<String, Object>> iterator = set.iterator();
 
-		if (!iss.equals(verifyISS)) {
+			while (iterator.hasNext()) {
 
-			throw new Exception("iss验证错误");
+				Entry<String, Object> entry = iterator.next();
 
-		}
+				map.put(entry.getKey(), entry.getValue()); // 自定义值
 
-		if (new Date().after(verifyEXP)) {
+			}
 
-			throw new Exception("exp验证错误");
+		} catch (Exception e) {
 
-		}
-
-		if (!jwt.equals(verifyCreateJWT(map, verifyEXP))) {
-
-			throw new Exception("jwt验证错误");
+			throw new Exception(e.getMessage());
 
 		}
 
@@ -123,40 +122,11 @@ public class JWT {
 
 	}
 
-	/*
-	 * 验证创建JWT
-	 */
-	private static String verifyCreateJWT(Map<String, Object> map, Date verifyEXP) {
-
-		JSONObject header = new JSONObject();
-
-		header.put("typ", typ);
-		header.put("alg", alg);
-
-		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-
-		byte[] keys = DatatypeConverter.parseBase64Binary(secret);
-
-		Key key = new SecretKeySpec(keys, signatureAlgorithm.getJcaName());
-
-		JwtBuilder jwtBuilder = Jwts.builder();
-
-		jwtBuilder.setHeader(header);
-		jwtBuilder.setIssuer(iss).setExpiration(verifyEXP);
-
-		jwtBuilder.addClaims(map); // 自定义值
-
-		jwtBuilder.signWith(key);
-
-		return jwtBuilder.compact();
-
-	}
-
 	public static void main(String[] args) throws Exception {
 
 		Map<String, Object> map = URLUtil.getParamsByParam("id=123456");
 
-		verifyJWT(createJWT(map, 1000000));
+		verifyJWT(createJWT(map, 0));
 
 	}
 
