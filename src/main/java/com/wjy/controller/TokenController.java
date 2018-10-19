@@ -7,9 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wjy.jwt.JWT;
 import com.wjy.result.JSONResult;
-import com.wjy.util.PropertiesUtil;
+import com.wjy.token.JWT;
 import com.wjy.util.URLUtil;
 
 @RestController
@@ -18,17 +17,11 @@ public class TokenController {
 	@GetMapping(value = "/getToken")
 	public JSONResult getToken(HttpServletRequest request, long mills) {
 
-		String token = null;
-
-		String param = request.getQueryString();
-
 		try {
 
-			Map<String, Object> map = URLUtil.getParamsByParam(param);
+			Map<String, Object> map = URLUtil.getParamsByParam(request.getQueryString());
 
-			token = JWT.createJWT(map, mills);
-
-			return JSONResult.ok(token);
+			return JSONResult.ok(JWT.createJWT(map, mills));
 
 		} catch (Exception e) {
 
@@ -43,14 +36,9 @@ public class TokenController {
 
 		try {
 
-			Map<String, Object> map = JWT.parseJWT(token);
+			Map<String, Object> map = JWT.verifyJWT(token);
 
-			map.remove("iss");
-			map.remove("exp");
-
-			token = JWT.createJWT(map, mills);
-
-			return JSONResult.ok(token);
+			return JSONResult.ok(JWT.createJWT(map, mills));
 
 		} catch (Exception e) {
 
@@ -65,31 +53,15 @@ public class TokenController {
 
 		try {
 
-			Map<String, Object> map = JWT.parseJWT(token);
+			Map<String, Object> map = JWT.verifyJWT(token);
 
-			Object iss = map.get("iss");
-			long expMillis = Long.parseLong(map.get("exp").toString());
+			if (returnValue) {
 
-			long nowMillis = System.currentTimeMillis();
-
-			if (PropertiesUtil.getValue("jwt.payload.iss").equals(iss) || nowMillis <= expMillis) {
-
-				if (returnValue) {
-
-					map.remove("iss");
-					map.remove("exp");
-
-					return JSONResult.build(200, "yes", map);
-
-				} else {
-
-					return JSONResult.build(200, "yes", null);
-
-				}
+				return JSONResult.ok(map);
 
 			} else {
 
-				return JSONResult.build(200, "no", null);
+				return JSONResult.ok();
 
 			}
 
