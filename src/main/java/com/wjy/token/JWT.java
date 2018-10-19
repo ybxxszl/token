@@ -19,6 +19,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 
 public class JWT {
 
@@ -86,6 +87,45 @@ public class JWT {
 	}
 
 	/*
+	 * 刷新JWT
+	 */
+	public static String refreshJWT(String jwt, long mills) throws Exception {
+
+		try {
+
+			String payload = jwt.split("[.]")[1];
+
+			JSONObject object = JSONObject.parseObject(new String(Decoders.BASE64URL.decode(payload)));
+
+			object.remove("iss");
+			object.remove("exp");
+
+			Map<String, Object> map = new HashMap<String, Object>();
+
+			Set<Entry<String, Object>> set = object.entrySet();
+			Iterator<Entry<String, Object>> iterator = set.iterator();
+
+			while (iterator.hasNext()) {
+
+				Entry<String, Object> entry = iterator.next();
+
+				map.put(entry.getKey(), entry.getValue()); // 自定义值
+
+			}
+
+			jwt = createJWT(map, mills);
+
+		} catch (Exception e) {
+
+			throw new Exception(e.getMessage());
+
+		}
+
+		return jwt;
+
+	}
+
+	/*
 	 * 验证JWT
 	 */
 	public static Map<String, Object> verifyJWT(String jwt) throws Exception {
@@ -126,7 +166,9 @@ public class JWT {
 
 		Map<String, Object> map = URLUtil.getParamsByParam("id=123456");
 
-		verifyJWT(createJWT(map, 0));
+		verifyJWT(createJWT(map, 1000000));
+
+		refreshJWT(createJWT(map, 0), 1000000);
 
 	}
 

@@ -38,9 +38,7 @@ public class TokenController {
 
 		try {
 
-			Map<String, Object> map = JWT.verifyJWT(token);
-
-			return JSONResult.ok(JWT.createJWT(map, mills));
+			return JSONResult.ok(JWT.refreshJWT(token, mills));
 
 		} catch (Exception e) {
 
