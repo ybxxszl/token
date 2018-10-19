@@ -12,8 +12,10 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wjy.jedis.RedisUtil;
 import com.wjy.util.PropertiesUtil;
 import com.wjy.util.URLUtil;
+import com.wjy.util.UUIDUtil;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
@@ -59,6 +61,8 @@ public class JWT {
 
 			Date exp = new Date(iatMills + mills);
 
+			String jti = UUIDUtil.getUUID();
+
 			SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
 			byte[] keys = DatatypeConverter.parseBase64Binary(secret);
@@ -68,13 +72,15 @@ public class JWT {
 			JwtBuilder jwtBuilder = Jwts.builder();
 
 			jwtBuilder.setHeader(header);
-			jwtBuilder.setIssuer(iss).setExpiration(exp);
+			jwtBuilder.setIssuer(iss).setExpiration(exp).setId(jti);
 
 			jwtBuilder.addClaims(map); // 自定义值
 
 			jwtBuilder.signWith(key);
 
 			jwt = jwtBuilder.compact();
+
+			RedisUtil.set("token:" + jti, jwt, (int) (mills / 1000));
 
 		} catch (Exception e) {
 
@@ -99,6 +105,10 @@ public class JWT {
 
 			object.remove("iss");
 			object.remove("exp");
+
+			String jti = object.remove("jti").toString();
+
+			RedisUtil.del("token:" + jti);
 
 			Map<String, Object> map = new HashMap<String, Object>();
 
@@ -141,6 +151,16 @@ public class JWT {
 			claims.remove("iss");
 			claims.remove("exp");
 
+			String jti = claims.remove("jti").toString();
+
+			String token = RedisUtil.get("token:" + jti);
+
+			if (!jwt.equals(token)) {
+
+				throw new Exception("token验证失败");
+
+			}
+
 			Set<Entry<String, Object>> set = claims.entrySet();
 			Iterator<Entry<String, Object>> iterator = set.iterator();
 
@@ -166,9 +186,9 @@ public class JWT {
 
 		Map<String, Object> map = URLUtil.getParamsByParam("id=123456");
 
-		verifyJWT(createJWT(map, 1000000));
+		// verifyJWT(createJWT(map, 60000));
 
-		refreshJWT(createJWT(map, 0), 1000000);
+		refreshJWT(createJWT(map, 0), 60000);
 
 	}
 
