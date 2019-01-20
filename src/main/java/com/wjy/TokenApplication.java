@@ -8,12 +8,12 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 @SpringBootApplication
 public class TokenApplication extends SpringBootServletInitializer {
 
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-		return builder.sources(TokenApplication.class);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(TokenApplication.class, args);
+    }
 
-	public static void main(String[] args) {
-		SpringApplication.run(TokenApplication.class, args);
-	}
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(TokenApplication.class);
+    }
 }

@@ -3,89 +3,82 @@ package com.wjy.jedis;
 import redis.clients.jedis.Jedis;
 
 /**
- * @date 2018年10月10日
  * @author ybxxszl
+ * @date 2018年10月10日
  * @description Redis工具类
  */
 public class RedisUtil {
 
-	/**
-	 * @date 2018年10月10日
-	 * @author ybxxszl
-	 * @description TODO
-	 * @param key
-	 *            键
-	 * @param value
-	 *            值
-	 * @param seconds
-	 *            秒
-	 */
-	public static void set(String key, String value, int seconds) {
+    /**
+     * @param key     键
+     * @param value   值
+     * @param seconds 秒
+     * @date 2018年10月10日
+     * @author ybxxszl
+     * @description TODO
+     */
+    public static void set(String key, String value, int seconds) {
 
-		Jedis jedis = JedisPoolUtil.getInstance().getResource();
+        Jedis jedis = JedisPoolUtil.getInstance().getResource();
 
-		jedis.set(key, value);
+        jedis.set(key, value);
 
-		jedis.expire(key, seconds);
+        jedis.expire(key, seconds);
 
-		jedis.close();
+        jedis.close();
 
-	}
+    }
 
-	/**
-	 * @date 2018年10月10日
-	 * @author ybxxszl
-	 * @description TODO
-	 * @param key
-	 *            键
-	 * @param value
-	 *            值
-	 */
-	public static void set(String key, String value) {
+    /**
+     * @param key   键
+     * @param value 值
+     * @date 2018年10月10日
+     * @author ybxxszl
+     * @description TODO
+     */
+    public static void set(String key, String value) {
 
-		Jedis jedis = JedisPoolUtil.getInstance().getResource();
+        Jedis jedis = JedisPoolUtil.getInstance().getResource();
 
-		jedis.set(key, value);
+        jedis.set(key, value);
 
-		jedis.close();
+        jedis.close();
 
-	}
+    }
 
-	/**
-	 * @date 2018年10月10日
-	 * @author ybxxszl
-	 * @description TODO
-	 * @param key
-	 *            键
-	 * @return String 值
-	 */
-	public static String get(String key) {
+    /**
+     * @param key 键
+     * @return String 值
+     * @date 2018年10月10日
+     * @author ybxxszl
+     * @description TODO
+     */
+    public static String get(String key) {
 
-		Jedis jedis = JedisPoolUtil.getInstance().getResource();
+        Jedis jedis = JedisPoolUtil.getInstance().getResource();
 
-		String value = jedis.get(key);
+        String value = jedis.get(key);
 
-		jedis.close();
+        jedis.close();
 
-		return value;
+        return value;
 
-	}
+    }
 
-	/**
-	 * @date 2018年10月19日
-	 * @author ybxxszl
-	 * @description TODO
-	 * @param key
-	 *            键
-	 */
-	public static void del(String key) {
+    /**
+     * @param key 键
+     * @date 2018年10月19日
+     * @author ybxxszl
+     * @description TODO
+     */
+    public static void del(String key) {
 
-		Jedis jedis = JedisPoolUtil.getInstance().getResource();
+        Jedis jedis = JedisPoolUtil.getInstance().getResource();
 
-		jedis.del(key);
+        jedis.del(key);
 
-		jedis.close();
+        jedis.close();
 
-	}
+    }
 
 }
